@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- Mobile Metas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- Site Metas -->
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <link rel="shortcut icon" href="static/images/favicon.png" type="">
+
+  <title> Place-Prep </title>
+
+  <!-- bootstrap core css -->
+  <link rel="stylesheet" type="text/css" href="static/css/bootstrap.css" />
+
+  <!-- fonts style -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+  <!--owl slider stylesheet -->
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+
+  <!-- font awesome style -->
+  <link href="static/css/font-awesome.min.css" rel="stylesheet" />
+
+  <!-- Custom styles for this template -->
+  <link href="static/css/style.css" rel="stylesheet" />
+  <!-- responsive style -->
+  <link href="static/css/responsive.css" rel="stylesheet" />
+
+</head>
+
+<body>
+
+  <div class="hero_area">
+
+    <div class="hero_bg_box">
+      <div class="bg_img_box">
+        <img src="static/images/hero-bg.png" alt="">
+      </div>
+    </div>
+
+    <!-- header section strats -->
+       <header class="header_section">
+      <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg custom_nav-container ">
+          <a class="navbar-brand" href="{{ url_for('index') }}">
+            <span>
+              Place-Prep
+            </span>
+          </a>
+
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class=""> </span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item ">
+                <a class="nav-link" href="#">Home</a>
+              </li>
+              
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('index') }}#services">Services</a>
+              </li>
+            
+              <!-- NEW ITEMS -->
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('pyq') }}">PYQ</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('upload_resume') }}">Resume Checker</a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="{{ url_for('quiz') }}">Quiz <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('generate_questions') }}">LLM Question Generator</a>
+              </li>
+          
+          
+              <li class="nav-item">
+                {% if session.get('user') %}
+                    <!-- Show Profile if User is Logged in -->
+                    <a class="nav-link btn btn-outline-primary ml-2" href="{{ url_for('dashboard') }}">
+                        <i class="fa fa-user" aria-hidden="true"></i> Profile
+                    </a>
+                {% else %}
+                    <!-- Show Login if User is Not Logged in -->
+                    <a class="nav-link btn btn-outline-primary ml-2" href="{{ url_for('login') }}">
+                        <i class="fa fa-user" aria-hidden="true"></i> Login
+                    </a>
+                {% endif %}
+            </li>
+            
+            </ul>
+          
+            
+          </div>
+          
+        </nav>
+      </div>
+    </header>
+    <!-- end header section -->
+    <!-- slider section -->
+<section class="slider_section">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <div class="container">
+        <div class="row">
+          <!-- Score Column -->
+          <div class="col-md-6">
+            <div class="detail-box">
+              <h1>Quiz Results</h1>
+              <p><b>Your Score:</b> {{ correct }} / {{ total }} ({{ accuracy }}%)</p>
+              <p><b>Total Questions Attempted:</b> {{ total }}</p>
+              <p><b>Accuracy:</b> {{ accuracy }}%</p>
+              <div class="btn-box mt-3">
+                <a href="{{ url_for('quiz') }}" class="btn1">🔁 Try Again</a>
+              </div>
+              <p>scroll down to see incorrect question !</p>
+            </div>
+          </div>
+
+          <!-- Image Column -->
+          <div class="col-md-6">
+            <div class="img-box">
+              <img src="https://paramatrix.com/user/themes/paramatrix-2024/images/success-story/gamified-performance-enhancement.png" alt="">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+    <!-- end slider section -->
+  </div>
+<section class="why_section layout_padding">
+  <div class="container">
+    <div class="heading_container heading_center">
+      <h2>Detailed <span>Results</span></h2>
+    </div>
+
+    {% if incorrect_questions or results %}
+    <div class="why_container">
+      
+      <!-- Incorrect Answers -->
+      {% for q in incorrect_questions %}
+      <div>
+        <div>
+          <h5 style="color: red;">Incorrect</h5>
+          <p><b>Q:</b> {{ q.question }}</p>
+          {% if q.options %}
+          <ul>
+            {% for opt in q.options %}
+              <li>{{ opt }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+          <p><b>Your Answer:</b> {{ q.your_answer }}</p>
+          <p><b>Correct Answer:</b> {{ q.correct_answer }}</p>
+          {% if q.explanation %}
+          <p><i>{{ q.explanation }}</i></p>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+
+      <!-- Correct Answers -->
+      {% for q in results %}
+        {% if q.is_correct %}
+        <div>
+          <div>
+            <h5 style="color: green;">✅ Correct</h5>
+            <p><b>Q:</b> {{ q.question }}</p>
+            {% if q.options %}
+            <ul>
+              {% for opt in q.options %}
+                <li>{{ opt }}</li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+            <p><b>Your Answer:</b> {{ q.user_answer }}</p>
+            <p><b>Correct Answer:</b> {{ q.correct_answer }}</p>
+            {% if q.explanation %}
+            <p><i>{{ q.explanation }}</i></p>
+            {% endif %}
+          </div>
+        </div>
+        {% endif %}
+      {% endfor %}
+
+    </div>
+    {% else %}
+    <p class="text-center mt-4">No questions were attempted.</p>
+    {% endif %}
+  </div>
+</section>
+
+
+
+<section class="why_section layout_padding">
+  <div class="container">
+    <div class="btn-box">
+      <a href="{{ url_for('index') }}">
+        ⬅ Back to Home
+      </a>
+    </div>
+  </div>
+</section>
+
+  <!-- footer section -->
+<section class="footer_section">
+  <div class="container">
+    <p>
+      &copy; <span id="displayYear"></span> All Rights Reserved by
+      <a href="/">place-prep</a>
+    </p>
+  </div>
+</section>
+  <!-- footer section -->
+{% if questions %}
+<script>
+  window.onload = function () {
+    const quizSection = document.getElementById("quiz_section");
+    if (quizSection) {
+      quizSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+</script>
+{% endif %}
+  <!-- jQery -->
+  <script type="text/javascript" src="static/js/jquery-3.4.1.min.js"></script>
+  <!-- popper js -->
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+  </script>
+  <!-- bootstrap js -->
+  <script type="text/javascript" src="static/js/bootstrap.js"></script>
+  <!-- owl slider -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
+  </script>
+  <!-- custom js -->
+  <script type="text/javascript" src="static/js/custom.js"></script>
+  <!-- Google Map -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
+  </script>
+  <!-- End Google Map -->
+
+</body>
+
+</html>

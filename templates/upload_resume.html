@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- Mobile Metas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- Site Metas -->
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <link rel="shortcut icon" href="static/images/favicon.png" type="">
+
+  <title> Place-Prep </title>
+
+  <!-- bootstrap core css -->
+  <link rel="stylesheet" type="text/css" href="static/css/bootstrap.css" />
+
+  <!-- fonts style -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+  <!--owl slider stylesheet -->
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+
+  <!-- font awesome style -->
+  <link href="static/css/font-awesome.min.css" rel="stylesheet" />
+
+  <!-- Custom styles for this template -->
+  <link href="static/css/style.css" rel="stylesheet" />
+  <!-- responsive style -->
+  <link href="static/css/responsive.css" rel="stylesheet" />
+
+</head>
+
+<body>
+
+  <div class="hero_area">
+
+    <div class="hero_bg_box">
+      <div class="bg_img_box">
+        <img src="static/images/hero-bg.png" alt="">
+      </div>
+    </div>
+
+    <!-- header section strats -->
+     <header class="header_section">
+      <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg custom_nav-container ">
+          <a class="navbar-brand" href="{{ url_for('index') }}">
+            <span>
+              Place-Prep
+            </span>
+          </a>
+
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class=""> </span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('index') }}">Home </a>
+              </li>
+              
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('index') }}#services">Services</a>
+              </li>
+            
+          
+              <!-- NEW ITEMS -->
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('pyq') }}">PYQ</a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="{{ url_for('upload_resume') }}">Resume Checker<span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('quiz') }}">Quiz</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('generate_questions') }}">LLM Question Generator</a>
+              </li>
+          
+              <li class="nav-item">
+                {% if session.get('user') %}
+                    <!-- Show Profile if User is Logged in -->
+                    <a class="nav-link btn btn-outline-primary ml-2" href="{{ url_for('dashboard') }}">
+                        <i class="fa fa-user" aria-hidden="true"></i> Profile
+                    </a>
+                {% else %}
+                    <!-- Show Login if User is Not Logged in -->
+                    <a class="nav-link btn btn-outline-primary ml-2" href="{{ url_for('login') }}">
+                        <i class="fa fa-user" aria-hidden="true"></i> Login
+                    </a>
+                {% endif %}
+            </li>
+            
+            </ul>
+          
+            
+          </div>
+          
+        </nav>
+      </div>
+    </header>
+    <!-- end header section -->
+    <!-- slider section -->
+<section class="slider_section">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <div class="container">
+        <div class="row">
+          <!-- Form Column -->
+          <div class="col-md-6">
+            <div class="detail-box">
+              <h1>Resume Improvement Tool</h1>
+              <p>Upload your resume and job description to receive improvement suggestions and an optimized version.</p>
+              <form method="POST" enctype="multipart/form-data">
+                <label for="resume">Upload Resume (PDF):</label>
+                <input type="file" id="resume" name="resume" accept="application/pdf" required class="form-control mb-3">
+
+                <label for="job_description">Job Description:</label>
+                <textarea id="job_description" name="job_description" rows="6" class="form-control mb-3" required></textarea>
+
+                <div class="btn-box mt-3">
+                  <button type="submit" class="btn1">Get Suggestions</button>
+                </div>
+              </form>
+            </div>
+          </div>
+          <!-- Image Column -->
+          <div class="col-md-6">
+            <div class="img-box">
+              <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Resume Assistant">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+    <!-- end slider section -->
+  </div>
+
+{% if request.method == 'POST' %}
+<section class="why_section layout_padding">
+  <div class="container" id="quiz_section">
+    <div class="heading_container heading_center">
+      <h2>Resume <span>Results</span></h2>
+    </div>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="alert-messages">
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <!-- Suggestions -->
+    {% if suggestions %}
+    <div class="why_container mb-4">
+      <div class="box">
+        <h4>Suggestions:</h4>
+        <p style="white-space: pre-wrap; text-align: left;">{{ suggestions }}</p>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Updated Resume -->
+    {% if updated_resume %}
+    <div class="why_container">
+      <div class="box">
+        <h4>Improved Resume:</h4>
+        <p style="white-space: pre-wrap;text-align: left;">{{ updated_resume }}</p>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+</section>
+{% endif %}
+
+
+<section class="why_section layout_padding">
+  <div class="container">
+    <div class="btn-box">
+      <a href="{{ url_for('index') }}">
+        ⬅ Back to Home
+      </a>
+    </div>
+  </div>
+</section>
+
+  <!-- footer section -->
+<section class="footer_section">
+  <div class="container">
+    <p>
+      &copy; <span id="displayYear"></span> All Rights Reserved by
+      <a href="/">place-prep</a>
+    </p>
+  </div>
+</section>
+
+  <!-- footer section -->
+{% if questions %}
+<script>
+  window.onload = function () {
+    const quizSection = document.getElementById("quiz_section");
+    if (quizSection) {
+      quizSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+</script>
+{% endif %}
+  <!-- jQery -->
+  <script type="text/javascript" src="static/js/jquery-3.4.1.min.js"></script>
+  <!-- popper js -->
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+  </script>
+  <!-- bootstrap js -->
+  <script type="text/javascript" src="static/js/bootstrap.js"></script>
+  <!-- owl slider -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
+  </script>
+  <!-- custom js -->
+  <script type="text/javascript" src="static/js/custom.js"></script>
+  <!-- Google Map -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
+  </script>
+  <!-- End Google Map -->
+
+</body>
+
+</html>

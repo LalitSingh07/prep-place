@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- Mobile Metas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- Site Metas -->
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <link rel="shortcut icon" href="static/images/favicon.png" type="">
+
+  <title> Place-Prep </title>
+
+  <!-- bootstrap core css -->
+  <link rel="stylesheet" type="text/css" href="static/css/bootstrap.css" />
+
+  <!-- fonts style -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+  <!--owl slider stylesheet -->
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+
+  <!-- font awesome style -->
+  <link href="static/css/font-awesome.min.css" rel="stylesheet" />
+
+  <!-- Custom styles for this template -->
+  <link href="static/css/style.css" rel="stylesheet" />
+  <!-- responsive style -->
+  <link href="static/css/responsive.css" rel="stylesheet" />
+
+</head>
+
+<body>
+
+  <div class="hero_area">
+
+    <div class="hero_bg_box">
+      <div class="bg_img_box">
+        <img src="static/images/hero-bg.png" alt="">
+      </div>
+    </div>
+
+    <!-- header section strats -->
+    <header class="header_section">
+      <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg custom_nav-container ">
+          <a class="navbar-brand" href="{{ url_for('index') }}">
+            <span>
+              Place-Prep
+            </span>
+          </a>
+
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class=""> </span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="{{ url_for('index') }}">Home <span class="sr-only">(current)</span></a>
+              </li>
+              
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('index') }}#services">Services</a>
+              </li>
+            
+          
+              <!-- NEW ITEMS -->
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('pyq') }}">PYQ</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('upload_resume') }}">Resume Checker</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('quiz') }}">Quiz</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('generate_questions') }}">LLM Question Generator</a>
+              </li>
+          
+              <li class="nav-item">
+                {% if session.get('user') %}
+                    <!-- Show Profile if User is Logged in -->
+                    <a class="nav-link btn btn-outline-primary ml-2" href="{{ url_for('dashboard') }}">
+                        <i class="fa fa-user" aria-hidden="true"></i> Profile
+                    </a>
+                {% else %}
+                    <!-- Show Login if User is Not Logged in -->
+                    <a class="nav-link btn btn-outline-primary ml-2" href="{{ url_for('login') }}">
+                        <i class="fa fa-user" aria-hidden="true"></i> Login
+                    </a>
+                {% endif %}
+            </li>
+            
+            </ul>
+          
+            
+          </div>
+          
+        </nav>
+      </div>
+    </header>
+    <!-- end header section -->
+    <!-- slider section -->
+    <section class="slider_section ">
+      <div id="customCarousel1" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <div class="container ">
+              <div class="row">
+                <div class="col-md-6 ">
+                  <div class="detail-box">
+                    <h1>
+                      Ace Your <br>
+                      Placements
+                    </h1>
+                    <p>
+                      Prepare with company-specific quizzes, past year questions, and AI-generated practice sets. Personalized, smart, and designed to help you land your dream job with confidence.
+                    </p>
+                    <div class="btn-box">
+                      <a href="#features" class="btn1">
+                        Learn More
+                      </a>
+                    </div>
+                  </div>
+                  
+                </div>
+                <div class="col-md-6">
+                  <div class="img-box">
+                    <!-- <img src="static/images/slider-img.png" alt=""> -->
+                    <img src="https://paramatrix.com/user/themes/paramatrix-2024/images/success-story/gamified-performance-enhancement.png" alt="">
+                    <!-- <img src=https://th.bing.com/th/id/R.05cd9a0bb4c72e5ba98ece031987955d?rik=3fhwdWWsYapV2g&riu=http%3a%2f%2fappsuccessor.com%2fimages%2fandroid_app_development.gif&ehk=IUEjFleIaY%2bNU5sJL7JaJFtO7%2fEBRLG6k2UFme3VoSk%3d&risl=&pid=ImgRaw&r=0" alt=""> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-item ">
+            <div class="container ">
+              <div class="row">
+                <div class="col-md-6 ">
+                  <div class="detail-box">
+                    <h1>
+                      Smart Prep <br>
+                      with AI
+                    </h1>
+                    <p>
+                      Our AI analyzes your performance and generates tailored quizzes to boost your weak areas. Experience adaptive learning like never before — efficient, focused, and effective.
+                    </p>
+                    <div class="btn-box">
+                      <a href="#ai-section" class="btn1">
+                        Explore AI Tools
+                      </a>
+                    </div>
+                  </div>
+                  
+                </div>
+                <div class="col-md-6">
+                  <div class="img-box">
+                    <!-- <img src="static/images/slider-img.png" alt=""> -->
+                    <img src="https://paramatrix.com/user/themes/paramatrix-2024/images/success-story/gamified-performance-enhancement.png" alt="">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <div class="container ">
+              <div class="row">
+                <div class="col-md-6 ">
+                  <div class="detail-box">
+                    <h1>
+                      Real Questions <br>
+                      Real Success
+                    </h1>
+                    <p>
+                      Practice with real previous year questions from top companies. Stay ahead with regularly updated content that reflects the latest trends in campus placements and tech interviews.
+                    </p>
+                    <div class="btn-box">
+                      <a href="{{ url_for('quiz') }}" class="btn1">
+                        Start Practicing
+                      </a>
+                    </div>
+                  </div>
+                  
+                </div>
+                <div class="col-md-6">
+                  <div class="img-box">
+                    <!-- <img src="static/images/slider-img.png" alt=""> -->
+                    <img src="https://paramatrix.com/user/themes/paramatrix-2024/images/success-story/gamified-performance-enhancement.png" alt="">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <ol class="carousel-indicators">
+          <li data-target="#customCarousel1" data-slide-to="0" class="active"></li>
+          <li data-target="#customCarousel1" data-slide-to="1"></li>
+          <li data-target="#customCarousel1" data-slide-to="2"></li>
+        </ol>
+      </div>
+
+    </section>
+    <!-- end slider section -->
+  </div>
+
+
+  <!-- service section -->
+
+ <section class="service_section layout_padding" id="services">
+  <div class="service_container">
+    <div class="container ">
+      <div class="heading_container heading_center">
+        <h2>
+          Our <span>Services</span>
+        </h2>
+        <p>
+          We provide a comprehensive suite of tools to help students and job seekers ace their placements with confidence.
+        </p>
+      </div>
+      <div class="row">
+        <div class="col-md-4 ">
+          <div class="box ">
+            <div class="img-box">
+              <img src="static/images/s1.png" alt="">
+            </div>
+            <div class="detail-box">
+              <h5>
+                Quiz Practice & PYQs
+              </h5>
+              <p>
+                Access a rich database of aptitude quizzes and previous year placement questions categorized by company and topic.
+              </p>
+              <a href="{{ url_for('quiz') }}">
+                Practice Now
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 ">
+          <div class="box ">
+            <div class="img-box">
+              <img src="static/images/s2.png" alt="">
+            </div>
+            <div class="detail-box">
+              <h5>
+                AI-Powered Resume Review
+              </h5>
+              <p>
+                Upload your resume and job description to get personalized feedback and an optimized version generated using AI.
+              </p>
+              <a href="{{ url_for('upload_resume') }}">
+                Get Started
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 ">
+          <div class="box ">
+            <div class="img-box">
+              <img src="static/images/s3.png" alt="">
+            </div>
+            <div class="detail-box">
+              <h5>
+                Smart Performance Insights
+              </h5>
+              <p>
+                Track your progress, analyze accuracy across topics, and get intelligent suggestions for focused preparation.
+              </p>
+              <a href="{{ url_for('dashboard') }}">
+                View Insights
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="btn-box">
+        <a href="{{ url_for('index') }}#services">
+          View All
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+  <!-- end service section -->
+
+
+  <!-- about section -->
+<section class="about_section layout_padding" id="aboutus">
+  <div class="container">
+    <div class="heading_container heading_center">
+      <h2>
+        About <span>Us</span>
+      </h2>
+      <p>
+        Empowering students and job seekers with smart tools to crack their dream jobs through data-driven insights and AI-powered preparation.
+      </p>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="img-box">
+          <img src="static/images/about-img.png" alt="About Image">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="detail-box">
+          <h3>
+            Your Smart Career Companion
+          </h3>
+          <p>
+            Our platform is designed to guide you through the placement journey with a combination of structured quizzes, company-specific PYQs, and intelligent performance tracking.
+          </p>
+          <p>
+            With integrated AI resume reviews and personalized feedback, we help you stand out to recruiters and focus on areas that matter most. Whether you're just starting out or refining your strategy, we’re here to support you every step of the way.
+          </p>
+          <a href="#services">
+            Explore Services
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <!-- end about section -->
+
+  <!-- why section -->
+
+ <section class="why_section layout_padding">
+  <div class="container">
+    <div class="heading_container heading_center">
+      <h2>
+        Why Choose <span>Us</span>
+      </h2>
+    </div>
+    <div class="why_container">
+
+      <div class="box">
+        <div class="img-box">
+          <img src="static/images/w1.png" alt="AI Analysis Icon">
+        </div>
+        <div class="detail-box">
+          <h5>
+            AI-Powered Resume & Performance Insights
+          </h5>
+          <p>
+            Get personalized resume reviews and quiz feedback using powerful AI models. We help you identify gaps, improve clarity, and track your accuracy across topics in real time.
+          </p>
+        </div>
+      </div>
+
+      <div class="box">
+        <div class="img-box">
+          <img src="static/images/w2.png" alt="Quiz System Icon">
+        </div>
+        <div class="detail-box">
+          <h5>
+            Structured Quizzes & PYQs
+          </h5>
+          <p>
+            Practice with topic-wise quizzes and company-specific previous year questions (PYQs) to prepare smartly for your target companies with relevant and updated content.
+          </p>
+        </div>
+      </div>
+
+      <div class="box">
+        <div class="img-box">
+          <img src="static/images/w3.png" alt="Personalized Icon">
+        </div>
+        <div class="detail-box">
+          <h5>
+            Tailored Learning Experience
+          </h5>
+          <p>
+            Every user gets a customized journey—our system tracks your strengths and weaknesses to help you focus on the right topics, at the right time, with the right difficulty.
+          </p>
+        </div>
+      </div>
+
+      
+    </div>
+    <div class="btn-box">
+      <a href="#about">
+        Learn More
+      </a>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+  <!-- info section -->
+
+<section class="info_section layout_padding2">
+  <div class="container">
+    <div class="row">
+
+      <!-- Address and Contact -->
+      <div class="col-md-6 col-lg-3 info_col">
+        <div class="info_contact">
+          <h4>Contact Us</h4>
+          <div class="contact_link_box">
+            <a href="#">
+              <i class="fa fa-map-marker" aria-hidden="true"></i>
+              <span>uttrakhand, India</span>
+            </a>
+            <a href="tel:+911234567890">
+              <i class="fa fa-phone" aria-hidden="true"></i>
+              <span>+91 12345 67890</span>
+            </a>
+            <a href="mailto:support@place-prep.com">
+              <i class="fa fa-envelope" aria-hidden="true"></i>
+              <span>support@place-prep.com</span>
+            </a>
+          </div>
+        </div>
+        <div class="info_social">
+          <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+          <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+          <a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
+          <a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <!-- Info Description -->
+      <div class="col-md-6 col-lg-3 info_col">
+        <div class="info_detail">
+          <h4>About place-prep</h4>
+          <p>
+            place-prep is a placement preparation platform that offers AI-powered quiz generation, resume optimization, and insights from past recruitment patterns to help you crack your dream job.
+          </p>
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="col-md-6 col-lg-2 mx-auto info_col">
+        <div class="info_link_box">
+          <h4>Quick Links</h4>
+          <div class="info_links">
+            <a class="active" href="/">Home</a>
+            <a href="{{ url_for('index') }}#aboutus">About</a>
+            <a href="{{ url_for('index') }}#services">Services</a>
+           
+          </div>
+        </div>
+      </div>
+
+      <!-- Subscription Form -->
+      <div class="col-md-6 col-lg-3 info_col">
+        <h4>Stay Updated</h4>
+        <form action="#">
+          <input type="email" placeholder="Enter email" required />
+          <button type="submit">Subscribe</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+  <!-- end info section -->
+
+  <!-- footer section -->
+<section class="footer_section">
+  <div class="container">
+    <p>
+      &copy; <span id="displayYear"></span> All Rights Reserved by
+      <a href="/">place-prep</a>
+    </p>
+  </div>
+</section>
+
+<script>
+  // Auto-update year
+  document.getElementById("displayYear").textContent = new Date().getFullYear();
+</script>
+
+  <!-- footer section -->
+
+  <!-- jQery -->
+  <script type="text/javascript" src="static/js/jquery-3.4.1.min.js"></script>
+  <!-- popper js -->
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+  </script>
+  <!-- bootstrap js -->
+  <script type="text/javascript" src="static/js/bootstrap.js"></script>
+  <!-- owl slider -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
+  </script>
+  <!-- custom js -->
+  <script type="text/javascript" src="static/js/custom.js"></script>
+  <!-- Google Map -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
+  </script>
+  <!-- End Google Map -->
+
+</body>
+
+</html>

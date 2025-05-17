@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Registration Form</title>
+  <link rel="stylesheet" href="static/css/register.css"> <!-- Link to your SCSS compiled CSS -->
+  <link rel="stylesheet" href="static/css/style.css"> <!-- Link to your SCSS compiled CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    /* Inline CSS for image preview */
+    .profile-upload {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .profile-upload img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #ccc;
+      display: block;
+      margin: 0 auto 10px;
+    }
+    .error-message {
+      color: red;
+      font-size: 12px;
+      margin-top: -15px;
+      margin-bottom: 15px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="form_wrapper">
+  <div class="title_container">
+    <h2>Register</h2>
+    <h3>Create an account to get started</h3>
+  </div>
+
+  <form id="registrationForm" method="post" action="{{ url_for('register') }}" enctype="multipart/form-data">
+    <div class="profile-upload">
+      <img id="profilePreview" src="https://via.placeholder.com/100" alt="Profile Preview">
+      <input type="file" name="profile_image" accept="image/*" onchange="previewImage(event)">
+    </div>
+  
+    <div class="input_field">
+      <span><i class="fa fa-user"></i></span>
+      <input type="text" name="name" placeholder="Full Name" required>
+    </div>
+  
+    <div class="input_field">
+      <span><i class="fa fa-envelope"></i></span>
+      <input type="email" name="email" placeholder="Email" required>
+    </div>
+  
+    <div class="input_field">
+      <span><i class="fa fa-lock"></i></span>
+      <input type="password" id="password" name="password" placeholder="Password" required>
+    </div>
+  
+    <div class="input_field">
+      <span><i class="fa fa-lock"></i></span>
+      <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required>
+    </div>
+    <div class="error-message" id="passwordError">Passwords do not match</div>
+  
+    <div class="input_field">
+      <span><i class="fa fa-university"></i></span>
+      <input type="text" name="college" placeholder="College Name" required>
+    </div>
+  
+    <div class="select_option input_field">
+      <select name="degree" required>
+        <option value="" disabled selected>Select Degree</option>
+        <option value="BCA">BCA</option>
+        <option value="MCA">MCA</option>
+        <option value="B.Tech">B.Tech</option>
+        <option value="M.Tech">M.Tech</option>
+        <option value="B.Sc">B.Sc</option>
+        <option value="M.Sc">M.Sc</option>
+      </select>
+      <div class="select_arrow"></div>
+    </div>
+  
+    <div class="input_field">
+      <span><i class="fa fa-code"></i></span>
+      <input type="text" name="branch" placeholder="Branch" required>
+    </div>
+  
+    <div class="select_option grad_year_select input_field">
+      <select name="grad_year" required>
+        <option value="" disabled selected>Select Year of Graduation</option>
+        <option value="2024">2024</option>
+        <option value="2025">2025</option>
+        <option value="2026">2026</option>
+        <option value="2027">2027</option>
+      </select>
+      <div class="select_arrow"></div>
+    </div>
+  
+    <input type="submit" value="Register">
+  </form>
+  <p style="text-align:center; margin-top:15px;">
+    <a href="{{ url_for('login') }}">Already have an account? login here.</a>
+  </p>  
+   <p style="text-align:center; margin-top:15px;">
+    <a href="{{ url_for('index') }}">Go back to Home.</a>
+  </p>
+
+ 
+</div>
+
+<script>
+  function previewImage(event) {
+    const reader = new FileReader();
+    reader.onload = function () {
+      const output = document.getElementById('profilePreview');
+      output.src = reader.result;
+    };
+    reader.readAsDataURL(event.target.files[0]);
+  }
+
+  document.getElementById('registrationForm').addEventListener('submit', function (e) {
+    const password = document.getElementById('password').value;
+    const confirm = document.getElementById('confirmPassword').value;
+    const error = document.getElementById('passwordError');
+
+    if (password !== confirm) {
+      e.preventDefault();
+      error.style.display = 'block';
+    } else {
+      error.style.display = 'none';
+    }
+  });
+</script>
+
+</body>
+</html>

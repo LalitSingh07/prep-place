@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <link rel="stylesheet" href="static/css/register.css"> <!-- Link to your SCSS compiled CSS -->
+  <link rel="stylesheet" href="static/css/style.css"> <!-- Link to your SCSS compiled CSS -->
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    .error-message {
+      color: red;
+      font-size: 12px;
+      margin-top: -10px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="form_wrapper">
+  <div class="title_container">
+    <h2>Login</h2>
+        <h3>Welcome back! Please log in to continue</h3>
+  </div>
+
+  <form method="POST" action="{{ url_for('login') }}">
+    <div class="input_field">
+      <span><i class="fa fa-envelope"></i></span>
+      <input type="email" name="email" placeholder="Email" required>
+    </div>
+
+    <div class="input_field">
+      <span><i class="fa fa-lock"></i></span>
+      <input type="password" name="password" placeholder="Password" required>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="error-message">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <input type="submit" value="Login">
+  </form>
+
+  <p style="text-align:center; margin-top:15px;">
+    <a href="{{ url_for('register') }}">Don't have an account? Register here.</a>
+  </p>
+  <p style="text-align:center; margin-top:15px;">
+    <a href="{{ url_for('index') }}">Go back to Home.</a>
+  </p>
+</div>
+
+</body>
+</html>
