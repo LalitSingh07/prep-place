@@ -1,17 +1,21 @@
 
-from flask import Flask, render_template, request, session, flash, redirect, url_for
+import os
+import json
 import random
+import requests
+from typing import List
+from flask import Flask, render_template, request, session, flash, redirect, url_for, jsonify, send_from_directory
+from werkzeug.utils import secure_filename
+from PyPDF2 import PdfReader
+from dotenv import load_dotenv
 from firebase_setup import db
 from firebase_admin import auth
-import requests
-import os
-from dotenv import load_dotenv
-from werkzeug.utils import secure_filename
-import json
-from PyPDF2 import PdfReader
 from groq import Groq
 from pydantic import BaseModel, Field, ValidationError
-from typing import List
+from utils.groq_llm import ask_groq
+from utils.tts import text_to_speech
+from utils.stt import speech_to_text
+
 
 load_dotenv()
 
@@ -993,6 +997,118 @@ def delete_user(email):
 
     return redirect(url_for('list_users'))
 
+
+# Landing page: collect company, job desc, resume
+@app.route('/interviewer', methods=['GET', 'POST'])
+def interviewer_home():
+    if request.method == 'POST':
+        company_name = request.form.get('company_name')
+        job_description = request.form.get('job_description')
+        resume_file = request.files.get('resume')
+
+        if not all([company_name, job_description, resume_file]):
+            flash('Please fill in all fields and upload a resume PDF.')
+            return redirect(url_for('interviewer_home'))
+
+        # Save uploaded resume
+        filename = secure_filename(resume_file.filename)
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        resume_file.save(filepath)
+
+        # Convert resume PDF to text
+        resume_text = extract_text_from_pdf(filepath)
+
+        # Save details in session for later use in interview
+        session['company_name'] = company_name
+        session['job_description'] = job_description
+        session['resume_text'] = resume_text
+
+        flash('Details saved. Start your interview!')
+        return redirect(url_for('interview'))
+
+    return render_template('interviewhome.html')
+
+# Helper function: extract text from PDF
+def extract_text_from_pdf(filepath):
+    reader = PdfReader(filepath)
+    text = ''
+    for page in reader.pages:
+        text += page.extract_text() or ''
+    return text.strip()
+
+# Interviewer chat page
+@app.route('/interview')
+def interview():
+    return render_template('interview.html')
+
+# Handle text input in interview chat
+@app.route('/send_message', methods=['POST'])
+def send_message():
+    user_input = request.json.get('message')
+
+    # Retrieve context from session
+    company_name = session.get('company_name')
+    job_description = session.get('job_description')
+    resume_text = session.get('resume_text')
+
+    # Construct prompt with context
+    prompt = (
+        f"You are conducting an interview for the company: {company_name}.\n"
+        f"Job Description:\n{job_description}\n"
+        f"Candidate's Resume:\n{resume_text}\n"
+        f"Candidate says: {user_input}\n"
+        "Respond accordingly."
+    )
+
+    # Get response from LLM
+    ai_response = ask_groq(prompt)
+
+    # Convert response to speech
+    audio_path = text_to_speech(ai_response)
+
+    return jsonify({
+        'response': ai_response,
+        'audio_url': audio_path
+    })
+
+# Handle audio input in interview chat
+@app.route('/audio_input', methods=['POST'])
+def audio_input():
+    audio_file = request.files['audio']
+
+    # Convert audio to text
+    user_text = speech_to_text(audio_file)
+
+    # Retrieve context
+    company_name = session.get('company_name')
+    job_description = session.get('job_description')
+    resume_text = session.get('resume_text')
+
+    # Construct prompt with context
+    prompt = (
+        f"You are conducting an interview for the company: {company_name}.\n"
+        f"Job Description:\n{job_description}\n"
+        f"Candidate's Resume:\n{resume_text}\n"
+        f"Candidate says: {user_text}\n"
+        "Respond accordingly."
+    )
+
+    # Get LLM response
+    ai_response = ask_groq(prompt)
+
+    # Convert response to speech
+    audio_path = text_to_speech(ai_response)
+
+    return jsonify({
+        'user_text': user_text,
+        'response': ai_response,
+        'audio_url': audio_path
+    })
+
+# Serve generated audio files
+@app.route('/static/audio/<filename>')
+def serve_audio(filename):
+    return send_from_directory('static/audio', filename)
 
 if __name__ == '__main__':
     app.run(debug=True)

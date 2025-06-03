@@ -1,0 +1,74 @@
+{% include 'header.html' %}
+
+  <section class="slider_section ">
+  <div id="customCarousel1" class="carousel slide" data-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <div class="container ">
+          <div class="row">
+            <div class="col-md-6 ">
+              <div class="detail-box">
+                <h1>
+                  Ace Your <br>
+                  Mock Interviews
+                </h1>
+                <p>
+                  Practice real-time interviews with an AI-powered interviewer. Upload your resume, choose the company and role, and experience personalized mock sessions with instant feedback to boost your confidence.
+                </p>
+            
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="img-box">
+                <img src="https://paramatrix.com/user/themes/paramatrix-2024/images/success-story/gamified-performance-enhancement.png" alt="Mock Interview Illustration">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> 
+  </div>
+</section>
+
+    <!-- end slider section -->
+  </div>
+
+
+<section class="why_section layout_padding" id="interviewer">
+  <div class="container">
+    <div class="heading_container heading_center">
+      <h2>
+        Start Your <span>Mock Interview</span>
+      </h2>
+      <p>Fill in the details below to begin a personalized AI-powered interview based on your resume and target job role.</p>
+    </div>
+
+    <div class="form_container mt-4">
+      <form action="{{ url_for('interviewer_home') }}" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+          <label for="company_name">Target Company Name</label>
+          <input type="text" class="form-control" id="company_name" name="company_name" placeholder="e.g., Google, Infosys" required>
+        </div>
+
+        <div class="form-group mt-3">
+          <label for="job_description">Job Description</label>
+          <textarea class="form-control" id="job_description" name="job_description" rows="5" placeholder="Paste the job description here..." required></textarea>
+        </div>
+
+        <div class="form-group mt-3">
+          <label for="resume">Upload Your Resume (PDF)</label>
+          <input type="file" class="form-control-file" id="resume" name="resume" accept=".pdf" required>
+        </div>
+
+    <div class="btn-box">
+     <button type="submit" class="btn1">Start Interview</button>
+    </div>
+
+      </form>
+    </div>
+  </div>
+</section>
+
+
+
+{% include 'footer.html' %}

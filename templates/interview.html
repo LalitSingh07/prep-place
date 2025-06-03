@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Mock Interview</title>
+<style>
+    body { 
+        font-family: Arial, sans-serif; 
+        background: #f5f8ff; 
+        color: #333; 
+        margin: 0; 
+        padding: 0; 
+        display: flex; 
+        justify-content: center; 
+        align-items: center; 
+        height: 100vh; 
+        flex-direction: column;
+    }
+
+    h1 {
+        margin-top: 20px;
+        color: #0e7ff6;
+        font-size: 2em;
+    }
+
+    .chat-container { 
+        width: 100%; 
+        max-width: 700px; 
+        background: #ffffff; 
+        border-radius: 10px; 
+        display: flex; 
+        flex-direction: column; 
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        height: 80vh;
+    }
+
+    .chat-box { 
+        flex: 1; 
+        padding: 20px; 
+        overflow-y: auto; 
+        display: flex; 
+        flex-direction: column; 
+        background: #eef3fb;
+    }
+
+    .message { 
+        margin: 10px 0; 
+        max-width: 80%; 
+        line-height: 1.4; 
+        padding: 10px 15px; 
+        border-radius: 8px; 
+        opacity: 0; 
+        transform: translateY(10px); 
+        animation: fadeIn 0.3s ease forwards; 
+    }
+
+    .user-message { 
+        align-self: flex-end; 
+        background: #0e7ff6; 
+        color: white;
+    }
+
+    .ai-message { 
+        align-self: flex-start; 
+        background: #dbe9ff; 
+        color: #000;
+    }
+
+    .input-area { 
+        display: flex; 
+        padding: 15px; 
+        border-top: 1px solid #ccc; 
+        background: #f1f5fb; 
+        align-items: center;
+    }
+
+    .input-area input[type="text"] { 
+        flex: 1; 
+        background: #fff; 
+        border: 1px solid #ccc; 
+        padding: 10px; 
+        border-radius: 4px; 
+        color: #333; 
+    }
+
+    .input-area button { 
+        background: #0e7ff6; 
+        color: white; 
+        border: none; 
+        padding: 10px 15px; 
+        margin-left: 10px; 
+        border-radius: 4px; 
+        cursor: pointer; 
+        white-space: nowrap;
+    }
+
+    .input-area button:hover { 
+        background: #006edc; 
+    }
+
+    .typing { 
+        font-style: italic; 
+        opacity: 0.7; 
+        margin-top: 5px; 
+        animation: blink 1s infinite;
+    }
+
+    @keyframes fadeIn { 
+        to { 
+            opacity: 1; 
+            transform: translateY(0); 
+        } 
+    }
+
+    @keyframes blink { 
+        0%, 100% { opacity: 0.7; } 
+        50% { opacity: 0.3; } 
+    }
+
+    #recording-indicator {
+        color: red; 
+        margin-left: 10px; 
+        font-weight: bold;
+        user-select: none;
+    }
+
+    #welcome-message {
+        opacity: 1 !important;
+        transform: none !important;
+        font-size: 1.1em;
+        line-height: 1.5em;
+        font-weight: bold;
+    }
+
+    .home-button {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        padding: 10px 20px;
+        background-color: #0e7ff6;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 1em;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .home-button:hover {
+        background-color: #006edc;
+    }
+</style>
+</head>
+<body>
+
+<h1>Prep-Place Mock Interview</h1>
+
+<div class="chat-container">
+    <div id="chat-box" class="chat-box">
+        <!-- Chat messages will appear here -->
+    </div>
+    <div class="input-area">
+        <input type="text" id="user-input" placeholder="Type your response...">
+        <button onclick="sendMessage()">Send</button>
+        <button onclick="startRecording()" id="record-btn">🎤 Record</button>
+        <button onclick="stopRecording()" id="stop-btn" style="display:none;">⏹️ Stop</button>
+        <button id="stop-speaking-btn" style="display:none; margin-left:10px;">🛑 Stop Speaking</button>
+        <div id="recording-indicator" style="display:none;">🔴 Recording...</div>
+    </div>
+</div>
+
+<a class="home-button" href="/">🏠 Go Back Home</a>
+
+<script>
+    // The rest of your existing JavaScript code remains unchanged.
+    // (All JS from your original post still works as-is with the new theme.)
+
+    let currentAudio = null;
+
+    function appendMessage(message, sender) {
+        const chatBox = document.getElementById('chat-box');
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message', sender === 'user' ? 'user-message' : 'ai-message');
+        messageDiv.textContent = message;
+        chatBox.appendChild(messageDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function showWelcomeMessage() {
+        const chatBox = document.getElementById('chat-box');
+        if (chatBox.children.length === 0) {
+            const welcomeDiv = document.createElement('div');
+            welcomeDiv.id = 'welcome-message';
+            welcomeDiv.innerHTML = `
+                Welcome to <span style="color:#007bff;">Prep-Place</span>!<br/>
+                Your ultimate AI-powered placement prep assistant.<br/>
+                Ready to ace your interview? 🚀
+            `;
+            chatBox.appendChild(welcomeDiv);
+        }
+    }
+
+    function removeWelcomeMessage() {
+        const welcomeDiv = document.getElementById('welcome-message');
+        if (welcomeDiv) {
+            welcomeDiv.remove();
+        }
+    }
+
+    function playAudio(url) {
+        if (currentAudio) {
+            currentAudio.pause();
+            currentAudio.currentTime = 0;
+        }
+        currentAudio = new Audio(url);
+        currentAudio.play();
+        document.getElementById('stop-speaking-btn').style.display = 'inline';
+        currentAudio.onended = () => {
+            document.getElementById('stop-speaking-btn').style.display = 'none';
+            currentAudio = null;
+        };
+    }
+
+    document.getElementById('stop-speaking-btn').addEventListener('click', () => {
+        if (currentAudio) {
+            currentAudio.pause();
+            currentAudio.currentTime = 0;
+            document.getElementById('stop-speaking-btn').style.display = 'none';
+        }
+    });
+
+    async function sendMessage() {
+        const userInput = document.getElementById('user-input').value.trim();
+        if (!userInput) return;
+        removeWelcomeMessage();
+        appendMessage(userInput, 'user');
+        document.getElementById('user-input').value = '';
+
+        const typingDiv = document.createElement('div');
+        typingDiv.classList.add('ai-message', 'message', 'typing');
+        typingDiv.textContent = 'Interviewer is typing...';
+        document.getElementById('chat-box').appendChild(typingDiv);
+        document.getElementById('chat-box').scrollTop = document.getElementById('chat-box').scrollHeight;
+
+        try {
+            const response = await fetch('/send_message', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: userInput })
+            });
+            const data = await response.json();
+            typingDiv.remove();
+            appendMessage(data.response, 'ai');
+            if(data.audio_url) playAudio(data.audio_url);
+        } catch (error) {
+            typingDiv.remove();
+            appendMessage("Sorry, something went wrong.", 'ai');
+            console.error(error);
+        }
+    }
+
+    let mediaRecorder;
+    let audioChunks = [];
+
+    function startRecording() {
+        navigator.mediaDevices.getUserMedia({ audio: true })
+            .then(stream => {
+                mediaRecorder = new MediaRecorder(stream);
+                mediaRecorder.start();
+                audioChunks = [];
+
+                document.getElementById('recording-indicator').style.display = 'inline';
+                document.getElementById('record-btn').style.display = 'none';
+                document.getElementById('stop-btn').style.display = 'inline';
+
+                mediaRecorder.addEventListener('dataavailable', event => {
+                    audioChunks.push(event.data);
+                });
+
+                mediaRecorder.addEventListener('stop', () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    const formData = new FormData();
+                    formData.append('audio', audioBlob);
+
+                    const typingDiv = document.createElement('div');
+                    typingDiv.classList.add('ai-message', 'message', 'typing');
+                    typingDiv.textContent = 'Interviewer is typing...';
+                    document.getElementById('chat-box').appendChild(typingDiv);
+                    document.getElementById('chat-box').scrollTop = document.getElementById('chat-box').scrollHeight;
+
+                    fetch('/audio_input', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        typingDiv.remove();
+                        processAudioResponse(data);
+                    })
+                    .catch(err => {
+                        typingDiv.remove();
+                        appendMessage("Sorry, something went wrong with audio input.", 'ai');
+                        console.error(err);
+                    });
+
+                    audioChunks = [];
+                    document.getElementById('recording-indicator').style.display = 'none';
+                    document.getElementById('record-btn').style.display = 'inline';
+                    document.getElementById('stop-btn').style.display = 'none';
+                });
+            })
+            .catch(error => {
+                console.error('Error accessing microphone:', error);
+            });
+    }
+
+    function stopRecording() {
+        if(mediaRecorder && mediaRecorder.state !== 'inactive') {
+            mediaRecorder.stop();
+        }
+    }
+
+    function processAudioResponse(data) {
+        removeWelcomeMessage();
+        if (data.user_text) appendMessage(data.user_text, 'user');
+        appendMessage(data.response, 'ai');
+        if(data.audio_url) playAudio(data.audio_url);
+    }
+
+    window.onload = () => {
+        showWelcomeMessage();
+    };
+</script>
+
+</body>
+</html>
